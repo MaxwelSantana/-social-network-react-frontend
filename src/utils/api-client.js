@@ -23,7 +23,7 @@ async function client(
             if (response.ok) {
                 return data;
             } else {
-                return Promise.reject(data);
+                return Promise.reject(data.error);
             }
         });
 }

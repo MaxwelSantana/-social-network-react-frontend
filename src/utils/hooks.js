@@ -32,7 +32,7 @@ function useAsync(initialState) {
                 );
             }
             setState({ status: 'pending' });
-            promise.then(
+            return promise.then(
                 (data) => {
                     setData(data);
                     return data;

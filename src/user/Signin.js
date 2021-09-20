@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
 import Spinner from '../components/Spinner';
+import { useAuth } from '../context/auth.context';
 import { client } from '../utils/api-client';
 import { useAsync } from '../utils/hooks';
 
@@ -9,6 +10,8 @@ export default function Signin() {
         email: '',
         password: '',
     });
+
+    const { login } = useAuth();
 
     const { data, error, isLoading, run, reset } = useAsync();
 
@@ -31,16 +34,7 @@ export default function Signin() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        run(
-            client('signin', { data: formFields }).then(
-                (dataObj) => {
-                    authenticate(dataObj);
-                    return dataObj;
-                },
-                (errorObj) =>
-                    Promise.reject(errorObj.error || errorObj.message),
-            ),
-        );
+        run(login(formFields));
     };
 
     return (
@@ -54,9 +48,9 @@ export default function Signin() {
                 {error}
             </div>
 
-            <Spinner show={isLoading} />
+            {/* <Spinner show={isLoading} />
 
-            {data && <Redirect to="/" />}
+            {data && <Redirect to="/" />} */}
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

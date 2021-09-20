@@ -1,11 +1,11 @@
-import { BrowserRouter } from 'react-router-dom';
+import { AppProviders } from './context';
 import MainRouter from './MainRouter';
 
 function App() {
     return (
-        <BrowserRouter>
+        <AppProviders>
             <MainRouter />
-        </BrowserRouter>
+        </AppProviders>
     );
 }
 
