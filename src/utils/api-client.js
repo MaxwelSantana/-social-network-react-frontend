@@ -1,5 +1,5 @@
-// const apiURL = process.env.NODE_API_URL;
-const apiURL = 'http://localhost:8080';
+const apiURL = process.env.REACT_APP_API_URL;
+// const apiURL = 'http://localhost:8080';
 
 async function client(
     endpoint,

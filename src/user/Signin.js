@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { useAsync } from '../utils/hooks';
-import { signin } from '../services/auth-service';
 import { Spinner } from '../components/Spinner';
-import { Redirect } from 'react-router-dom';
+import { useAuth } from '../context/auth-context';
+import { useAsync } from '../utils/hooks';
 
 export default function Signin() {
+    const { signin } = useAuth();
     const [formFields, setFormFields] = useState({
         email: '',
         password: '',
     });
 
-    const { data, error, isLoading, run, reset } = useAsync();
+    const { error, isLoading, run, reset } = useAsync();
 
     const { email, password } = formFields;
 
@@ -37,8 +37,6 @@ export default function Signin() {
             </div>
 
             <Spinner show={isLoading} />
-
-            {data && <Redirect to="/" />}
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

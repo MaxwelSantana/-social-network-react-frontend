@@ -1,15 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../context/auth-context';
 import * as authService from '../services/auth-service';
-import { withRouter } from 'react-router';
-import { useHistory } from 'react-router-dom';
 
-function Navbar({ history }) {
-    const signout = () => {
-        authService.signout().then(() => {
-            history.push('/signin');
-        });
-    };
+function Navbar() {
+    const { user, signout } = useAuth();
 
     const isAuthenticated = () => authService.isAuthenticated();
 
@@ -59,15 +54,26 @@ function Navbar({ history }) {
                                 </li>
                             </>
                         )}
-                        {isAuthenticated() && (
-                            <li className="nav-item">
-                                <button
-                                    className="btn btn-primary me-3"
-                                    onClick={signout}
-                                >
-                                    Sign Out
-                                </button>
-                            </li>
+                        {user && (
+                            <>
+                                <li className="nav-item">
+                                    <NavLink
+                                        exact
+                                        className="nav-link"
+                                        to={`/user/${user._id}`}
+                                    >
+                                        {user.name}
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <button
+                                        className="btn btn-primary me-3"
+                                        onClick={signout}
+                                    >
+                                        Sign Out
+                                    </button>
+                                </li>
+                            </>
                         )}
                     </ul>
                 </div>
@@ -76,4 +82,4 @@ function Navbar({ history }) {
     );
 }
 
-export default withRouter(Navbar);
+export default Navbar;

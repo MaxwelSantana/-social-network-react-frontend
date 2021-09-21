@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { client } from '../utils/api-client';
+import { Spinner } from '../components/Spinner';
+import { useAuth } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
 
 export default function Signup() {
@@ -9,7 +10,8 @@ export default function Signup() {
         password: '',
     });
 
-    const { data, error, run, reset } = useAsync();
+    const { signup } = useAuth();
+    const { error, isLoading, run, reset } = useAsync();
 
     const { name, email, password } = formFields;
 
@@ -20,13 +22,7 @@ export default function Signup() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        run(
-            client('signup', { data: formFields }).then(
-                (dataObj) => dataObj.user,
-                (errorObj) =>
-                    Promise.reject(errorObj.error || errorObj.message),
-            ),
-        );
+        run(signup(formFields));
     };
 
     return (
@@ -39,12 +35,8 @@ export default function Signup() {
             >
                 {error}
             </div>
-            <div
-                className="alert alert-info"
-                style={{ display: data ? '' : 'none' }}
-            >
-                User has successfully signed up, please Sign in!
-            </div>
+
+            <Spinner show={isLoading} />
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

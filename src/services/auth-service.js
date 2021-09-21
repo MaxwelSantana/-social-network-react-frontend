@@ -1,18 +1,18 @@
 import { client } from '../utils/api-client';
 
-const localStorageKey = 'token';
+const localStorageKey = 'user';
 
-function getToken() {
+function getUser() {
     return window.localStorage.getItem(localStorageKey);
 }
 
 function isAuthenticated() {
-    return Boolean(getToken());
+    return Boolean(getUser());
 }
 
-function handleUserResponse(response) {
-    window.localStorage.setItem(localStorageKey, response.token);
-    return response;
+function handleUserResponse(user) {
+    window.localStorage.setItem(localStorageKey, JSON.stringify(user));
+    return user;
 }
 
 function signin({ email, password }) {
@@ -32,7 +32,7 @@ async function signout() {
 }
 
 export {
-    getToken,
+    getUser,
     isAuthenticated,
     handleUserResponse,
     signin,

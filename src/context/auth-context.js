@@ -1,7 +1,11 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
-import { client } from '../utils/api-client';
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+} from 'react';
+import * as authService from '../services/auth-service';
 import { useAsync } from '../utils/hooks';
-import { signin} from '../services/auth-service';
 
 const authContext = createContext();
 
@@ -15,18 +19,34 @@ const useAuth = () => {
 };
 
 const useProvideAuth = () => {
-    const { data, status, error, isLoading, run } = useAsync();
+    const { data, error, isLoading, setData, run } = useAsync();
     const user = data?.user;
     const token = data?.token;
 
-    const login = useCallback(
-        (credentials) => run(signin(credentials)),
+    useEffect(() => {
+        const userData = authService.getUser();
+        if (userData) {
+            const userObj = JSON.parse(userData);
+            setData(userObj);
+        }
+    }, [setData]);
+
+    const signin = useCallback(
+        (credentials) => run(authService.signin(credentials)),
         [run],
     );
+    const signup = useCallback(
+        (credentials) => run(authService.signup(credentials)),
+        [run],
+    );
+    const signout = useCallback(() => {
+        authService.signout();
+        setData(null);
+    }, [setData]);
 
     console.log('user&token', { user, token });
 
-    return { user, token, login, isLoading, error };
+    return { user, token, signin, signup, signout, isLoading, error };
 };
 
 export { AuthProvider, useAuth };
