@@ -1,11 +1,11 @@
 import React from 'react';
-import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router';
+import { Redirect, Route, Switch, useLocation } from 'react-router';
+import { useAuth } from './context/auth-context';
 import Home from './core/Home';
 import Navbar from './core/Navbar';
+import Profile from './user/Profile';
 import Signin from './user/Signin';
 import Signup from './user/Signup';
-import Profile from './user/Profile';
-import { useAuth } from './context/auth-context';
 
 function PrivateRoute({ children, ...rest }) {
     const { user } = useAuth();
@@ -13,7 +13,6 @@ function PrivateRoute({ children, ...rest }) {
         <Route
             {...rest}
             render={({ location }) => {
-                console.log({ location });
                 return user ? (
                     children
                 ) : (

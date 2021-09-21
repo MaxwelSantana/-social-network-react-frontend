@@ -20,7 +20,8 @@ const useAuth = () => {
 };
 
 const useProvideAuth = () => {
-    const { data, isError, error, isLoading, setData, run } = useAsync();
+    const { data, isError, error, isLoading, setData, setError, run, reset } =
+        useAsync();
     const user = data?.user;
     const token = data?.token;
 
@@ -33,7 +34,10 @@ const useProvideAuth = () => {
     }, [setData]);
 
     const signin = useCallback(
-        (credentials) => run(authService.signin(credentials)),
+        (credentials, cbk) =>
+            run(authService.signin(credentials)).then(() => {
+                if (cbk) cbk();
+            }),
         [run],
     );
     const signup = useCallback(
@@ -45,12 +49,21 @@ const useProvideAuth = () => {
         setData(null);
     }, [setData]);
 
-    return { user, token, signin, signup, signout, isLoading, isError, error };
+    return {
+        user,
+        token,
+        signin,
+        signup,
+        signout,
+        isLoading,
+        isError,
+        error,
+        reset,
+    };
 };
 
 const useClient = () => {
     const { token } = useAuth();
-    console.log({ token });
     return useCallback(
         (endpoint, config) => client(endpoint, { ...config, token }),
         [token],

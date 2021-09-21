@@ -5,14 +5,14 @@ import { useAuth } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
 
 export default function Signin() {
-    const { signin } = useAuth();
+    const { signin, reset, isError, isLoading, error } = useAuth();
     const [formFields, setFormFields] = useState({
         email: '',
         password: '',
     });
     const { email, password } = formFields;
 
-    const { error, isLoading, run, reset } = useAsync();
+    // const { error, isLoading, run, reset } = useAsync();
     const history = useHistory();
     const location = useLocation();
     const { from } = location.state || { from: { pathname: '/' } };
@@ -25,10 +25,7 @@ export default function Signin() {
     const handleSubmit = (event) => {
         event.preventDefault();
         reset();
-        run(signin(formFields)).then(() => {
-            console.log('history update', from);
-            history.replace(from);
-        });
+        signin(formFields, () => history.replace(from));
     };
 
     return (
@@ -37,7 +34,7 @@ export default function Signin() {
 
             <div
                 className="alert alert-danger"
-                style={{ display: error ? '' : 'none' }}
+                style={{ display: isError ? '' : 'none' }}
             >
                 {error}
             </div>
