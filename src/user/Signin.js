@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory, useLocation } from 'react-router';
 import { Spinner } from '../components/Spinner';
 import { useAuth } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
@@ -9,10 +10,12 @@ export default function Signin() {
         email: '',
         password: '',
     });
+    const { email, password } = formFields;
 
     const { error, isLoading, run, reset } = useAsync();
-
-    const { email, password } = formFields;
+    const history = useHistory();
+    const location = useLocation();
+    const { from } = location.state || { from: { pathname: '/' } };
 
     const handleChange = (name) => (event) => {
         reset();
@@ -22,7 +25,10 @@ export default function Signin() {
     const handleSubmit = (event) => {
         event.preventDefault();
         reset();
-        run(signin(formFields));
+        run(signin(formFields)).then(() => {
+            console.log('history update', from);
+            history.replace(from);
+        });
     };
 
     return (

@@ -5,6 +5,7 @@ import React, {
     useEffect,
 } from 'react';
 import * as authService from '../services/auth-service';
+import { client } from '../utils/api-client';
 import { useAsync } from '../utils/hooks';
 
 const authContext = createContext();
@@ -19,7 +20,7 @@ const useAuth = () => {
 };
 
 const useProvideAuth = () => {
-    const { data, error, isLoading, setData, run } = useAsync();
+    const { data, isError, error, isLoading, setData, run } = useAsync();
     const user = data?.user;
     const token = data?.token;
 
@@ -44,9 +45,16 @@ const useProvideAuth = () => {
         setData(null);
     }, [setData]);
 
-    console.log('user&token', { user, token });
-
-    return { user, token, signin, signup, signout, isLoading, error };
+    return { user, token, signin, signup, signout, isLoading, isError, error };
 };
 
-export { AuthProvider, useAuth };
+const useClient = () => {
+    const { token } = useAuth();
+    console.log({ token });
+    return useCallback(
+        (endpoint, config) => client(endpoint, { ...config, token }),
+        [token],
+    );
+};
+
+export { AuthProvider, useAuth, useClient };

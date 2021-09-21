@@ -1,15 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router';
+import { Spinner } from '../components/Spinner';
+import { useClient } from '../context/auth-context';
+import { useAsync } from '../utils/hooks';
 
 export default function Profile() {
+    const { userId } = useParams();
+    const { data: user, isError, isLoading, error, run } = useAsync();
+    const client = useClient();
+
+    useEffect(() => {
+        if (!userId) return;
+        const endpoint = `user/${userId}`;
+        run(client(endpoint));
+    }, [userId, run, client]);
+
     return (
         <div className="container">
             <h2 className="mt-5 mb-5">Profile</h2>
-            <div className="row">
-                <div className="col-md-6">
-                    <p>Teste</p>
-                    <p>teste@teste.com</p>
-                </div>
+            <div
+                className="alert alert-danger"
+                style={{ display: isError ? '' : 'none' }}
+            >
+                {error}
             </div>
+            <Spinner show={isLoading} />
+            <p>{user?.name}</p>
+            <p>{user?.email}</p>
+            <p>{`Created at ${new Date(user?.created).toDateString()}`}</p>
+            <button type="button" className="btn btn-primary me-2">
+                Edit Profile
+            </button>
+            <button type="button" className="btn btn-danger">
+                Delete Profile
+            </button>
         </div>
     );
 }
