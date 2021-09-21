@@ -3,6 +3,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router';
 import { useAuth } from './context/auth-context';
 import Home from './core/Home';
 import Navbar from './core/Navbar';
+import EditProfile from './user/EditProfile';
 import Profile from './user/Profile';
 import Signin from './user/Signin';
 import Signup from './user/Signup';
@@ -50,6 +51,9 @@ export default function MainRouter() {
                 </PrivateRoute>
                 <PrivateRoute exact path="/user/:userId">
                     <Profile />
+                </PrivateRoute>
+                <PrivateRoute exact path="/user/edit/:userId">
+                    <EditProfile />
                 </PrivateRoute>
             </Switch>
         </div>

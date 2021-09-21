@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Spinner } from '../components/Spinner';
 import { useAuth, useClient } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
@@ -34,9 +35,12 @@ export default function Profile() {
             <p>{`Created at ${new Date(user?.created).toDateString()}`}</p>
             {isAuthenticatedUser() && (
                 <>
-                    <button type="button" className="btn btn-primary me-2">
+                    <Link
+                        to={`/user/edit/${user?._id}`}
+                        className="btn btn-primary me-2"
+                    >
                         Edit Profile
-                    </button>
+                    </Link>
                     <DeleteUser userId={user?._id} />
                 </>
             )}

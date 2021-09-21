@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
+import { useHistory, useLocation } from 'react-router';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { useAuth } from '../context/auth-context';
 
 export default function Signup() {
+    const history = useHistory();
     const [formFields, setFormFields] = useState({
         name: '',
         email: '',
         password: '',
     });
+    const { name, email, password } = formFields;
 
     const { signup, error, isLoading, isError, reset } = useAuth();
-
-    const { name, email, password } = formFields;
 
     const handleChange = (name) => (event) => {
         reset();
@@ -21,7 +22,7 @@ export default function Signup() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        signup(formFields);
+        signup(formFields, () => history.replace('/signin'));
     };
 
     return (

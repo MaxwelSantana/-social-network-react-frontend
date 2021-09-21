@@ -40,7 +40,10 @@ const useProvideAuth = () => {
         [run],
     );
     const signup = useCallback(
-        (credentials) => run(authService.signup(credentials)),
+        (credentials, cbk) =>
+            run(authService.signup(credentials).then(() => null)).then(
+                () => cbk && cbk(),
+            ),
         [run],
     );
     const signout = useCallback(() => {

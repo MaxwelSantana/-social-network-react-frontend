@@ -22,9 +22,7 @@ function signin({ email, password }) {
 }
 
 function signup({ name, email, password }) {
-    return client('signup', { data: { name, email, password } }).then(
-        handleUserResponse,
-    );
+    return client('signup', { data: { name, email, password } });
 }
 
 async function signout() {
