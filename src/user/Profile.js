@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import { Spinner } from '../components/Spinner';
 import { useAuth, useClient } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
+import { DeleteUser } from './DeleteUser';
 
 export default function Profile() {
     const { user: authUser } = useAuth();
@@ -36,9 +37,7 @@ export default function Profile() {
                     <button type="button" className="btn btn-primary me-2">
                         Edit Profile
                     </button>
-                    <button type="button" className="btn btn-danger">
-                        Delete Profile
-                    </button>
+                    <DeleteUser userId={user?._id} />
                 </>
             )}
         </div>

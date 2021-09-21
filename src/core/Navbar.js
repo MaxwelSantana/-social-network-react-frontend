@@ -24,7 +24,7 @@ function Navbar() {
                         className="nav-link"
                         to={`/user/${user._id}`}
                     >
-                        {user.name}
+                        {`${user.name}'s Profile`.toUpperCase()}
                     </NavLink>
                 </li>
                 <li className="nav-item">
