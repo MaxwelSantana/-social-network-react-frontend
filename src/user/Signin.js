@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { Spinner } from '../components/Spinner';
+import { ErrorMessage } from '../components/ErrorMessage';
 import { useAuth } from '../context/auth-context';
-import { useAsync } from '../utils/hooks';
 
 export default function Signin() {
     const { signin, reset, isError, isLoading, error } = useAuth();
@@ -12,7 +12,6 @@ export default function Signin() {
     });
     const { email, password } = formFields;
 
-    // const { error, isLoading, run, reset } = useAsync();
     const history = useHistory();
     const location = useLocation();
     const { from } = location.state || { from: { pathname: '/' } };
@@ -32,12 +31,7 @@ export default function Signin() {
         <div className="container">
             <h2 className="mt-5 mb-5">Signin</h2>
 
-            <div
-                className="alert alert-danger"
-                style={{ display: isError ? '' : 'none' }}
-            >
-                {error}
-            </div>
+            <ErrorMessage show={isError}>{error}</ErrorMessage>
 
             <Spinner show={isLoading} />
 

@@ -6,6 +6,7 @@ import Navbar from './core/Navbar';
 import Profile from './user/Profile';
 import Signin from './user/Signin';
 import Signup from './user/Signup';
+import Users from './user/Users';
 
 function PrivateRoute({ children, ...rest }) {
     const { user } = useAuth();
@@ -43,6 +44,9 @@ export default function MainRouter() {
                 </Route>
                 <PrivateRoute exact path="/">
                     <Home />
+                </PrivateRoute>
+                <PrivateRoute exact path="/users">
+                    <Users />
                 </PrivateRoute>
                 <PrivateRoute exact path="/user/:userId">
                     <Profile />

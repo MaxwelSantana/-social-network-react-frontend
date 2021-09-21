@@ -20,8 +20,7 @@ const useAuth = () => {
 };
 
 const useProvideAuth = () => {
-    const { data, isError, error, isLoading, setData, setError, run, reset } =
-        useAsync();
+    const { data, isError, error, isLoading, setData, run, reset } = useAsync();
     const user = data?.user;
     const token = data?.token;
 

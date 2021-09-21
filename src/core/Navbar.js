@@ -1,12 +1,40 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/auth-context';
-import * as authService from '../services/auth-service';
 
 function Navbar() {
     const { user, signout } = useAuth();
 
-    const isAuthenticated = () => authService.isAuthenticated();
+    const renderProtectedLinks = () => {
+        return (
+            <>
+                <li className="nav-item">
+                    <NavLink exact className="nav-link" to="/">
+                        Home
+                    </NavLink>
+                </li>
+                <li className="nav-item">
+                    <NavLink exact className="nav-link" to="/users">
+                        Users
+                    </NavLink>
+                </li>
+                <li className="nav-item">
+                    <NavLink
+                        exact
+                        className="nav-link"
+                        to={`/user/${user._id}`}
+                    >
+                        {user.name}
+                    </NavLink>
+                </li>
+                <li className="nav-item">
+                    <button className="btn btn-primary me-3" onClick={signout}>
+                        Sign Out
+                    </button>
+                </li>
+            </>
+        );
+    };
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -27,12 +55,8 @@ function Navbar() {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
-                        <li className="nav-item">
-                            <NavLink exact className="nav-link" to="/">
-                                Home
-                            </NavLink>
-                        </li>
-                        {!isAuthenticated() && (
+                        {!!user && renderProtectedLinks()}
+                        {!user && (
                             <>
                                 <li className="nav-item">
                                     <NavLink
@@ -54,27 +78,7 @@ function Navbar() {
                                 </li>
                             </>
                         )}
-                        {user && (
-                            <>
-                                <li className="nav-item">
-                                    <NavLink
-                                        exact
-                                        className="nav-link"
-                                        to={`/user/${user._id}`}
-                                    >
-                                        {user.name}
-                                    </NavLink>
-                                </li>
-                                <li className="nav-item">
-                                    <button
-                                        className="btn btn-primary me-3"
-                                        onClick={signout}
-                                    >
-                                        Sign Out
-                                    </button>
-                                </li>
-                            </>
-                        )}
+                        {user && <></>}
                     </ul>
                 </div>
             </div>

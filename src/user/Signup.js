@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { useAuth } from '../context/auth-context';
-import { useAsync } from '../utils/hooks';
 
 export default function Signup() {
     const [formFields, setFormFields] = useState({
@@ -10,8 +10,7 @@ export default function Signup() {
         password: '',
     });
 
-    const { signup } = useAuth();
-    const { error, isLoading, run, reset } = useAsync();
+    const { signup, error, isLoading, isError, reset } = useAuth();
 
     const { name, email, password } = formFields;
 
@@ -22,19 +21,14 @@ export default function Signup() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        run(signup(formFields));
+        signup(formFields);
     };
 
     return (
         <div className="container">
             <h2 className="mt-5 mb-5">Signup</h2>
 
-            <div
-                className="alert alert-danger"
-                style={{ display: error ? '' : 'none' }}
-            >
-                {error}
-            </div>
+            <ErrorMessage show={isError}>{error}</ErrorMessage>
 
             <Spinner show={isLoading} />
 

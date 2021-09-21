@@ -8,5 +8,4 @@ function Spinner({ show }) {
         </div>
     );
 }
-
 export { Spinner };
