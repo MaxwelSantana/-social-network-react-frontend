@@ -2,8 +2,12 @@ import { client } from '../utils/api-client';
 
 const localStorageKey = 'token';
 
-async function getToken() {
+function getToken() {
     return window.localStorage.getItem(localStorageKey);
+}
+
+function isAuthenticated() {
+    return Boolean(getToken());
 }
 
 function handleUserResponse(response) {
@@ -11,20 +15,27 @@ function handleUserResponse(response) {
     return response;
 }
 
-function login({ email, password }) {
+function signin({ email, password }) {
     return client('signin', { data: { email, password } }).then(
         handleUserResponse,
     );
 }
 
-function register({ name, email, password }) {
+function signup({ name, email, password }) {
     return client('signup', { data: { name, email, password } }).then(
         handleUserResponse,
     );
 }
 
-async function logout() {
+async function signout() {
     window.localStorage.removeItem(localStorageKey);
 }
 
-export { getToken, handleUserResponse, login, register, logout };
+export {
+    getToken,
+    isAuthenticated,
+    handleUserResponse,
+    signin,
+    signup,
+    signout,
+};

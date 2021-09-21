@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { client } from '../utils/api-client';
 import { useAsync } from '../utils/hooks';
-import * as authService from '../services/auth-service';
+import { signin} from '../services/auth-service';
 
 const authContext = createContext();
 
@@ -20,7 +20,7 @@ const useProvideAuth = () => {
     const token = data?.token;
 
     const login = useCallback(
-        (credentials) => run(authService.login(credentials)),
+        (credentials) => run(signin(credentials)),
         [run],
     );
 

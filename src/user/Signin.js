@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAsync } from '../utils/hooks';
-import { login } from '../services/auth-service';
+import { signin } from '../services/auth-service';
 import { Spinner } from '../components/Spinner';
 import { Redirect } from 'react-router-dom';
 
@@ -21,7 +21,8 @@ export default function Signin() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        run(login(formFields));
+        reset();
+        run(signin(formFields));
     };
 
     return (
