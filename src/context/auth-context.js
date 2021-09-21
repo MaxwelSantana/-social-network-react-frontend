@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { client } from '../utils/api-client';
 import { useAsync } from '../utils/hooks';
+import * as authService from '../services/auth-service';
 
 const authContext = createContext();
 
@@ -14,25 +15,18 @@ const useAuth = () => {
 };
 
 const useProvideAuth = () => {
-    const {
-        data: user,
-        status,
-        error,
-        isLoading,
-        isIdle,
-        isError,
-        isSuccess,
-        run,
-        setData,
-    } = useAsync();
+    const { data, status, error, isLoading, run } = useAsync();
+    const user = data?.user;
+    const token = data?.token;
 
-    const login = useCallback((credentials) =>
-        run(client('signin', { data: credentials })),
+    const login = useCallback(
+        (credentials) => run(authService.login(credentials)),
+        [run],
     );
 
-    console.log('user', user);
+    console.log('user&token', { user, token });
 
-    return { user, login };
+    return { user, token, login, isLoading, error };
 };
 
 export { AuthProvider, useAuth };

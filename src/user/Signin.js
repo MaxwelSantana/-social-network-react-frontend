@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Redirect } from 'react-router';
-import Spinner from '../components/Spinner';
-import { useAuth } from '../context/auth.context';
-import { client } from '../utils/api-client';
+import React, { useState } from 'react';
 import { useAsync } from '../utils/hooks';
+import { login } from '../services/auth-service';
+import { Spinner } from '../components/Spinner';
+import { Redirect } from 'react-router-dom';
 
 export default function Signin() {
     const [formFields, setFormFields] = useState({
@@ -11,25 +10,13 @@ export default function Signin() {
         password: '',
     });
 
-    const { login } = useAuth();
-
     const { data, error, isLoading, run, reset } = useAsync();
 
     const { email, password } = formFields;
 
-    useEffect(() => {
-        if (!data) return;
-        return <div>teste</div>;
-    }, [data]);
-
     const handleChange = (name) => (event) => {
         reset();
         setFormFields((prev) => ({ ...prev, [name]: event.target.value }));
-    };
-
-    const authenticate = (data) => {
-        if (!data) return;
-        localStorage.setItem('user', JSON.stringify(data));
     };
 
     const handleSubmit = (event) => {
@@ -48,9 +35,9 @@ export default function Signin() {
                 {error}
             </div>
 
-            {/* <Spinner show={isLoading} />
+            <Spinner show={isLoading} />
 
-            {data && <Redirect to="/" />} */}
+            {data && <Redirect to="/" />}
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

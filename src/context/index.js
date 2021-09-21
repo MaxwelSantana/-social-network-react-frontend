@@ -1,5 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './auth.context';
+import { AuthProvider } from './auth-context';
 
 function AppProviders({ children }) {
     return (
