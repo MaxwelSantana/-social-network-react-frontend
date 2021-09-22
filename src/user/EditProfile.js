@@ -4,6 +4,7 @@ import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { useClient } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
+import DefaultProfile from '../images/avatar.jpg';
 
 const validations = {
     name: function (value) {
@@ -42,6 +43,9 @@ function EditProfile() {
     const { isLoading, run } = useAsync();
     const client = useClient();
     const userDataRef = useRef(new FormData());
+    const photoUrl = userId
+        ? `${process.env.REACT_APP_API_URL}/user/photo/${userId}`
+        : DefaultProfile;
 
     useEffect(() => {
         if (!userId) return;
@@ -106,6 +110,12 @@ function EditProfile() {
             <h2 className="mt-5 mb-5">Edit Profile</h2>
             <ErrorMessage show={!!error}>{error}</ErrorMessage>
             <Spinner show={isLoading} />
+            <img
+                style={{ height: '200px', width: 'auto' }}
+                className="img-thumbnail"
+                src={photoUrl}
+                alt={name}
+            />
             <form
                 onSubmit={handleSubmit}
                 className={`row g-1 needs-validation was-validated`}
@@ -141,7 +151,7 @@ function EditProfile() {
                         type="email"
                         className="form-control"
                         onChange={handleChange('email')}
-                        required
+                        value={email}
                     />
                 </div>
                 <div className="form-group">
@@ -153,6 +163,7 @@ function EditProfile() {
                         type="password"
                         className="form-control"
                         onChange={handleChange('password')}
+                        value={password}
                     />
                 </div>
                 <div className="col-12">
