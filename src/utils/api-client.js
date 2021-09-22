@@ -5,12 +5,18 @@ async function client(
     endpoint,
     { data, token, headers: customHeaders, ...customConfig } = {},
 ) {
+    let defaultHeaders = {};
+    if (token) defaultHeaders = { Authorization: `Bearer ${token}` };
+    if (data)
+        defaultHeaders = {
+            ...defaultHeaders,
+            'Content-Type': 'application/json',
+        };
     const config = {
         method: data ? 'POST' : 'GET',
         body: data ? JSON.stringify(data) : undefined,
         headers: {
-            Authorization: token ? `Bearer ${token}` : undefined,
-            'Content-Type': data ? 'application/json' : undefined,
+            ...defaultHeaders,
             ...customHeaders,
         },
         ...customConfig,
