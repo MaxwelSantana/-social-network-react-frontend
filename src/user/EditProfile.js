@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Redirect, useParams } from 'react-router';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
-import { useClient } from '../context/auth-context';
+import { useAuth, useClient } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
 import DefaultProfile from '../images/avatar.jpg';
 
@@ -37,6 +37,7 @@ function EditProfile() {
         password: '',
         fileSize: 0,
     });
+    const { update } = useAuth();
     const [updated, setUpdated] = useState(false);
     const [error, setError] = useState('');
     const { userId } = useParams();
@@ -99,6 +100,7 @@ function EditProfile() {
                 body: userDataRef.current,
             }),
         ).then((user) => {
+            update(user);
             setUpdated(true);
         });
     };

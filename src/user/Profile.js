@@ -6,6 +6,7 @@ import { useAuth, useClient } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
 import { DeleteUser } from './DeleteUser';
 import DefaultProfile from '../images/avatar.jpg';
+import FollowProfileButton from './FollowProfileButton';
 
 export default function Profile() {
     const { user: authUser } = useAuth();
@@ -22,7 +23,20 @@ export default function Profile() {
         run(client(endpoint));
     }, [userId, run, client]);
 
-    const isAuthenticatedUser = () => authUser._id === userId;
+    const isAuthenticatedUser = authUser._id === userId;
+
+    const isFollowing =
+        isAuthenticatedUser &&
+        authUser.following &&
+        authUser.following.some(
+            (followingUser) => followingUser._id === userId,
+        );
+
+    const clickFollowButton = (callApi) => {
+        callApi({ userId: authUser._id, followId: userId }).then((data) => {
+            console.log(data);
+        });
+    };
 
     return (
         <div className="container">
@@ -44,7 +58,7 @@ export default function Profile() {
             <p>{user?.name}</p>
             <p>{user?.email}</p>
             <p>{`Created at ${new Date(user?.created).toDateString()}`}</p>
-            {isAuthenticatedUser() && (
+            {isAuthenticatedUser ? (
                 <>
                     <Link
                         to={`/user/edit/${user?._id}`}
@@ -54,6 +68,11 @@ export default function Profile() {
                     </Link>
                     <DeleteUser userId={user?._id} />
                 </>
+            ) : (
+                <FollowProfileButton
+                    following={isFollowing}
+                    onButtonClick={clickFollowButton}
+                />
             )}
         </div>
     );

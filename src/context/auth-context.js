@@ -51,12 +51,21 @@ const useProvideAuth = () => {
         setData(null);
     }, [setData]);
 
+    const update = useCallback(
+        (user) => {
+            authService.update(user);
+            setData((prev) => ({ ...prev, user }));
+        },
+        [setData],
+    );
+
     return {
         user,
         token,
         signin,
         signup,
         signout,
+        update,
         isLoading,
         isError,
         error,

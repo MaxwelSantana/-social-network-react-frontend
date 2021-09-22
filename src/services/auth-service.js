@@ -29,6 +29,19 @@ async function signout() {
     window.localStorage.removeItem(localStorageKey);
 }
 
+function update(user) {
+    const userData = getUser();
+    if (userData) {
+        const userObj = JSON.parse(userData);
+        const updatedUser = { ...userObj, user };
+        console.log({ updatedUser });
+        window.localStorage.setItem(
+            localStorageKey,
+            JSON.stringify(updatedUser),
+        );
+    }
+}
+
 export {
     getUser,
     isAuthenticated,
@@ -36,4 +49,5 @@ export {
     signin,
     signup,
     signout,
+    update,
 };
