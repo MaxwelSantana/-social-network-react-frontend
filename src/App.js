@@ -4,7 +4,6 @@ import Navbar from './core/Navbar';
 import MainRouter from './MainRouter';
 
 function ErrorFallback({ error }) {
-    console.log('teste', error);
     return <div className={`alert alert-danger`}>{error.message}</div>;
 }
 function App() {

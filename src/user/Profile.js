@@ -12,20 +12,14 @@ export default function Profile() {
     const { user: authUser } = useAuth();
     const { userId } = useParams();
     const [refetch, { data: user, error }] = useProfile(userId);
-
     const { name, email } = user;
+    useErrorHandler(error);
 
     const photoUrl = user._id
         ? `${process.env.REACT_APP_API_URL}/user/photo/${user._id}`
         : DefaultProfile;
 
     const isAuthenticatedUser = authUser._id === userId;
-
-    const errorHandler = useErrorHandler();
-    useEffect(() => {
-        if (!error) return;
-        errorHandler(error);
-    }, [error, errorHandler]);
 
     const renderActions = () => {
         if (isAuthenticatedUser) {

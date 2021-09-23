@@ -1,4 +1,5 @@
 import React from 'react';
+import { useErrorHandler } from 'react-error-boundary';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { useAuth } from '../context/auth-context';
@@ -16,7 +17,7 @@ function FollowProfileButton({ user, onChange }) {
         run(updateFollowUnFollowApiCall(user._id)).then(() => {
             if (onChange) run(onChange());
         });
-    }
+    };
 
     if (!currentUser || !user) return <></>;
 
@@ -38,6 +39,7 @@ function FollowProfileButton({ user, onChange }) {
             ) : (
                 <button
                     onClick={() => handleOnChange(unFollow)}
+                    disabled={isLoading}
                     className="btn btn-warning btn-raised"
                 >
                     {isLoading ? <Spinner show={true} /> : 'UnFollow'}
