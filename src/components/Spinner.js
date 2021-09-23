@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Spinner({ show, ...rest }) {
+function Spinner({ show, ...rest } = { show: true }) {
     if (!show) return null;
     return (
         <div className="spinner-border" role="status" {...rest}>

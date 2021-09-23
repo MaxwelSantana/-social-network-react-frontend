@@ -61,9 +61,8 @@ function useUnFollow() {
 }
 
 const useFindPeople = () => {
-    const {
-        user: { _id: currentUserId },
-    } = useAuth();
+    const { user } = useAuth();
+    const currentUserId = user?._id;
     const client = useClient();
     const { run, ...rest } = useAsync();
 

@@ -24,6 +24,11 @@ function Navbar() {
                     </NavLink>
                 </li>
                 <li className="nav-item">
+                    <NavLink exact className="nav-link" to="/post/create">
+                        New Post
+                    </NavLink>
+                </li>
+                <li className="nav-item">
                     <NavLink
                         exact
                         className="nav-link"
