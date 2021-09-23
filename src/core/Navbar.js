@@ -19,6 +19,11 @@ function Navbar() {
                     </NavLink>
                 </li>
                 <li className="nav-item">
+                    <NavLink exact className="nav-link" to="/findpeople">
+                        Find People
+                    </NavLink>
+                </li>
+                <li className="nav-item">
                     <NavLink
                         exact
                         className="nav-link"

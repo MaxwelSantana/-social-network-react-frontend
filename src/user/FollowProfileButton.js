@@ -29,20 +29,36 @@ function FollowProfileButton({ user, onChange }) {
         <div className="d-inline-block">
             <ErrorMessage show={isError}>Something wrong happened</ErrorMessage>
             {!isFollowing ? (
-                <button
-                    onClick={() => handleOnChange(follow)}
-                    disabled={isLoading}
-                    className="btn btn-success btn-raised mr-5"
-                >
-                    {isLoading ? <Spinner show={true} /> : 'Follow'}
-                </button>
+                <>
+                    <button
+                        onClick={() => handleOnChange(follow)}
+                        disabled={isLoading}
+                        className="btn btn-primary btn-rounded mr-5"
+                    >
+                        {isLoading ? (
+                            <Spinner
+                                show={true}
+                                style={{ width: '1.5em', height: '1.5em' }}
+                            />
+                        ) : (
+                            'Follow'
+                        )}
+                    </button>
+                </>
             ) : (
                 <button
                     onClick={() => handleOnChange(unFollow)}
                     disabled={isLoading}
-                    className="btn btn-warning btn-raised"
+                    className="btn btn-outline-primary btn-rounded"
                 >
-                    {isLoading ? <Spinner show={true} /> : 'UnFollow'}
+                    {isLoading ? (
+                        <Spinner
+                            show={true}
+                            style={{ width: '1.5em', height: '1.5em' }}
+                        />
+                    ) : (
+                        'UnFollow'
+                    )}
                 </button>
             )}
         </div>

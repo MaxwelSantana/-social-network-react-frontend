@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { useClient } from '../context/auth-context';
+import { useAuth, useClient } from '../context/auth-context';
 import { useAsync } from './hooks';
 
 const loadingUser = {
@@ -60,4 +60,23 @@ function useUnFollow() {
     return [callApi, { ...rest }];
 }
 
-export { useProfile, useFollow, useUnFollow };
+const useFindPeople = () => {
+    const {
+        user: { _id: currentUserId },
+    } = useAuth();
+    const client = useClient();
+    const { run, ...rest } = useAsync();
+
+    const fetch = useCallback(
+        () => run(client(`user/findpeople/${currentUserId}`)),
+        [run, client, currentUserId],
+    );
+
+    useEffect(() => {
+        fetch();
+    }, [fetch]);
+
+    return [fetch, { ...rest }];
+};
+
+export { useProfile, useFollow, useUnFollow, useFindPeople };
