@@ -2,7 +2,6 @@ import React from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router';
 import { useAuth } from './context/auth-context';
 import Home from './core/Home';
-import Navbar from './core/Navbar';
 import EditProfile from './user/EditProfile';
 import Profile from './user/Profile';
 import Signin from './user/Signin';
@@ -34,29 +33,26 @@ export default function MainRouter() {
     const location = useLocation();
     const { from } = location.state || { from: { pathname: '/' } };
     return (
-        <div>
-            <Navbar />
-            <Switch>
-                <Route exact path="/signin">
-                    {user ? <Redirect to={from} /> : <Signin />}
-                </Route>
-                <Route exact path="/signup">
-                    <Signup />
-                </Route>
-                <PrivateRoute exact path="/">
-                    <Home />
-                </PrivateRoute>
-                <PrivateRoute exact path="/users">
-                    <Users />
-                </PrivateRoute>
-                <PrivateRoute exact path="/user/:userId">
-                    <Profile />
-                </PrivateRoute>
-                <PrivateRoute exact path="/user/edit/:userId">
-                    <EditProfile />
-                </PrivateRoute>
-            </Switch>
-        </div>
+        <Switch>
+            <Route exact path="/signin">
+                {user ? <Redirect to={from} /> : <Signin />}
+            </Route>
+            <Route exact path="/signup">
+                <Signup />
+            </Route>
+            <PrivateRoute exact path="/">
+                <Home />
+            </PrivateRoute>
+            <PrivateRoute exact path="/users">
+                <Users />
+            </PrivateRoute>
+            <PrivateRoute exact path="/user/:userId">
+                <Profile />
+            </PrivateRoute>
+            <PrivateRoute exact path="/user/edit/:userId">
+                <EditProfile />
+            </PrivateRoute>
+        </Switch>
     );
 }
 /*

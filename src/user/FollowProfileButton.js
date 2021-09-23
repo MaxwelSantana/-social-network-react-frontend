@@ -1,22 +1,38 @@
 import React from 'react';
+import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
+import { useAuth } from '../context/auth-context';
+import { useAsync } from '../utils/hooks';
 import { useFollow } from '../utils/profiles';
 
-function FollowProfileButton({ following, onButtonClick }) {
-    const [callApi, { isLoading }] = useFollow();
+function FollowProfileButton({ user }) {
+    const { isLoading, isError, error, run, reset } = useAsync();
+    const { user: currentUser } = useAuth();
+
+    const [follow] = useFollow();
 
     const followClick = () => {
-        onButtonClick(callApi);
+        reset();
+        run(follow(user._id));
     };
 
     const unfollowClick = () => {
         // onButtonClick(unfollow);
     };
+
+    if (!currentUser || !user) return <></>;
+
+    const isFollowing =
+        user.followers &&
+        user.followers.some((follower) => follower._id === currentUser._id);
+
     return (
         <div className="d-inline-block">
-            {!following ? (
+            <ErrorMessage show={isError}>Something wrong happened</ErrorMessage>
+            {!isFollowing ? (
                 <button
                     onClick={followClick}
+                    disabled={isLoading}
                     className="btn btn-success btn-raised mr-5"
                 >
                     {isLoading ? <Spinner show={true} /> : 'Follow'}
@@ -33,4 +49,4 @@ function FollowProfileButton({ following, onButtonClick }) {
     );
 }
 
-export default FollowProfileButton;
+export { FollowProfileButton };

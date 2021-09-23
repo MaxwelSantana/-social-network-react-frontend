@@ -1,64 +1,28 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Spinner } from '../components/Spinner';
-import { useAuth, useClient } from '../context/auth-context';
-import { useAsync } from '../utils/hooks';
-import { DeleteUser } from './DeleteUser';
+import { useAuth } from '../context/auth-context';
 import DefaultProfile from '../images/avatar.jpg';
-import FollowProfileButton from './FollowProfileButton';
+import { useProfile } from '../utils/profiles';
+import { DeleteUser } from './DeleteUser';
+import { FollowProfileButton } from './FollowProfileButton';
 
 export default function Profile() {
     const { user: authUser } = useAuth();
     const { userId } = useParams();
-    const { data: user, isError, isLoading, error, run } = useAsync();
-    const client = useClient();
-    const photoUrl = userId
-        ? `${process.env.REACT_APP_API_URL}/user/photo/${userId}`
-        : DefaultProfile;
+    const user = useProfile(userId);
 
-    useEffect(() => {
-        if (!userId) return;
-        const endpoint = `user/${userId}`;
-        run(client(endpoint));
-    }, [userId, run, client]);
+    const { name, email } = user;
+
+    const photoUrl = user._id
+        ? `${process.env.REACT_APP_API_URL}/user/photo/${user._id}`
+        : DefaultProfile;
 
     const isAuthenticatedUser = authUser._id === userId;
 
-    const isFollowing =
-        isAuthenticatedUser &&
-        authUser.following &&
-        authUser.following.some(
-            (followingUser) => followingUser._id === userId,
-        );
-
-    const clickFollowButton = (callApi) => {
-        callApi({ userId: authUser._id, followId: userId }).then((data) => {
-            console.log(data);
-        });
-    };
-
-    return (
-        <div className="container">
-            <h2 className="mt-5 mb-5">Profile</h2>
-            <div
-                className="alert alert-danger"
-                style={{ display: isError ? '' : 'none' }}
-            >
-                {error}
-            </div>
-            <Spinner show={isLoading} />
-            <img
-                style={{ height: '200px', width: 'auto' }}
-                className="img-thumbnail"
-                src={photoUrl}
-                alt={user?.name}
-                onError={(i) => (i.target.src = `${DefaultProfile}`)}
-            />
-            <p>{user?.name}</p>
-            <p>{user?.email}</p>
-            <p>{`Created at ${new Date(user?.created).toDateString()}`}</p>
-            {isAuthenticatedUser ? (
+    const renderActions = () => {
+        if (isAuthenticatedUser) {
+            return (
                 <>
                     <Link
                         to={`/user/edit/${user?._id}`}
@@ -68,12 +32,30 @@ export default function Profile() {
                     </Link>
                     <DeleteUser userId={user?._id} />
                 </>
-            ) : (
-                <FollowProfileButton
-                    following={isFollowing}
-                    onButtonClick={clickFollowButton}
-                />
-            )}
+            );
+        } else {
+            return <FollowProfileButton user={user} />;
+        }
+    };
+
+    return (
+        <div className="container">
+            <h2 className="mt-5 mb-5">Profile</h2>
+            <img
+                style={{ height: '200px', width: 'auto' }}
+                className="img-thumbnail"
+                src={photoUrl}
+                alt={name}
+                onError={(i) => (i.target.src = `${DefaultProfile}`)}
+            />
+            <p>{name}</p>
+            <p>{email}</p>
+            <p>
+                {user.loadingUser
+                    ? null
+                    : `Created at ${new Date(user?.created).toDateString()}`}
+            </p>
+            {!user.loadingUser ? renderActions() : null}
         </div>
     );
 }

@@ -1,16 +1,33 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useClient } from '../context/auth-context';
 import { useAsync } from './hooks';
+
+const loadingUser = {
+    name: 'Loading...',
+    email: 'Loading...',
+    loadingUser: true,
+};
+
+function useProfile(userId) {
+    const client = useClient();
+    const { data, run } = useAsync();
+
+    useEffect(() => {
+        run(client(`user/${userId}`));
+    }, [run, client, userId]);
+
+    return data ?? loadingUser;
+}
 
 function useFollow() {
     const client = useClient();
 
     const { run, ...rest } = useAsync();
     const callApi = useCallback(
-        ({ userId, followId }) => {
+        (followId) => {
             return run(
                 client('user/follow', {
-                    data: { userId, followId },
+                    data: { followId },
                     method: 'PUT',
                 }),
             );
@@ -20,4 +37,4 @@ function useFollow() {
     return [callApi, { ...rest }];
 }
 
-export { useFollow };
+export { useProfile, useFollow };
