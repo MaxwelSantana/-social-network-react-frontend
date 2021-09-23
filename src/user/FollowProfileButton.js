@@ -3,22 +3,20 @@ import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { useAuth } from '../context/auth-context';
 import { useAsync } from '../utils/hooks';
-import { useFollow } from '../utils/profiles';
+import { useFollow, useUnFollow } from '../utils/profiles';
 
-function FollowProfileButton({ user }) {
-    const { isLoading, isError, error, run, reset } = useAsync();
+function FollowProfileButton({ user, onChange }) {
     const { user: currentUser } = useAuth();
-
+    const { isLoading, isError, reset, run } = useAsync();
     const [follow] = useFollow();
+    const [unFollow] = useUnFollow();
 
-    const followClick = () => {
+    const handleOnChange = (updateFollowUnFollowApiCall) => {
         reset();
-        run(follow(user._id));
-    };
-
-    const unfollowClick = () => {
-        // onButtonClick(unfollow);
-    };
+        run(updateFollowUnFollowApiCall(user._id)).then(() => {
+            if (onChange) run(onChange());
+        });
+    }
 
     if (!currentUser || !user) return <></>;
 
@@ -31,7 +29,7 @@ function FollowProfileButton({ user }) {
             <ErrorMessage show={isError}>Something wrong happened</ErrorMessage>
             {!isFollowing ? (
                 <button
-                    onClick={followClick}
+                    onClick={() => handleOnChange(follow)}
                     disabled={isLoading}
                     className="btn btn-success btn-raised mr-5"
                 >
@@ -39,10 +37,10 @@ function FollowProfileButton({ user }) {
                 </button>
             ) : (
                 <button
-                    onClick={unfollowClick}
+                    onClick={() => handleOnChange(unFollow)}
                     className="btn btn-warning btn-raised"
                 >
-                    UnFollow
+                    {isLoading ? <Spinner show={true} /> : 'UnFollow'}
                 </button>
             )}
         </div>

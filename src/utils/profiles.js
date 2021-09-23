@@ -10,13 +10,18 @@ const loadingUser = {
 
 function useProfile(userId) {
     const client = useClient();
-    const { data, run } = useAsync();
+    const { data, run, ...rest } = useAsync();
+
+    const fetch = useCallback(
+        () => run(client(`user/${userId}`)),
+        [run, client, userId],
+    );
 
     useEffect(() => {
-        run(client(`user/${userId}`));
-    }, [run, client, userId]);
+        fetch();
+    }, [fetch]);
 
-    return data ?? loadingUser;
+    return [fetch, { data: data ?? loadingUser, ...rest }];
 }
 
 function useFollow() {
@@ -37,4 +42,22 @@ function useFollow() {
     return [callApi, { ...rest }];
 }
 
-export { useProfile, useFollow };
+function useUnFollow() {
+    const client = useClient();
+
+    const { run, ...rest } = useAsync();
+    const callApi = useCallback(
+        (unfollowId) => {
+            return run(
+                client('user/unfollow', {
+                    data: { unfollowId },
+                    method: 'PUT',
+                }),
+            );
+        },
+        [client, run],
+    );
+    return [callApi, { ...rest }];
+}
+
+export { useProfile, useFollow, useUnFollow };

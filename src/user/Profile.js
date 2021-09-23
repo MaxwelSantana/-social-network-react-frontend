@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/auth-context';
@@ -10,7 +11,7 @@ import { FollowProfileButton } from './FollowProfileButton';
 export default function Profile() {
     const { user: authUser } = useAuth();
     const { userId } = useParams();
-    const user = useProfile(userId);
+    const [refetch, { data: user, error }] = useProfile(userId);
 
     const { name, email } = user;
 
@@ -19,6 +20,12 @@ export default function Profile() {
         : DefaultProfile;
 
     const isAuthenticatedUser = authUser._id === userId;
+
+    const errorHandler = useErrorHandler();
+    useEffect(() => {
+        if (!error) return;
+        errorHandler(error);
+    }, [error, errorHandler]);
 
     const renderActions = () => {
         if (isAuthenticatedUser) {
@@ -34,7 +41,7 @@ export default function Profile() {
                 </>
             );
         } else {
-            return <FollowProfileButton user={user} />;
+            return <FollowProfileButton user={user} onChange={refetch} />;
         }
     };
 
