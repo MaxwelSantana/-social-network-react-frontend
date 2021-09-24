@@ -13,6 +13,10 @@ const notificationContext = createContext();
 const NotificationProvider = ({ children }) => {
     const [notification, setNotification] = useState();
 
+    const success = useCallback((message) => {
+        setNotification({ type: 'success', message });
+    }, []);
+
     const error = useCallback((message) => {
         setNotification({ type: 'error', message });
     }, []);
@@ -21,7 +25,7 @@ const NotificationProvider = ({ children }) => {
         setNotification(null);
     };
 
-    const value = useMemo(() => ({ error }), [error]);
+    const value = useMemo(() => ({ error, success }), [error, success]);
 
     return (
         <notificationContext.Provider value={value}>

@@ -2,7 +2,9 @@ import React from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router';
 import { useAuth } from './context/auth-context';
 import Home from './core/Home';
+import EditPost from './post/EditPost';
 import NewPost from './post/NewPost';
+import SinglePost from './post/SinglePost';
 import EditProfile from './user/EditProfile';
 import FindPeople from './user/FindPeople';
 import Profile from './user/Profile';
@@ -45,6 +47,14 @@ export default function MainRouter() {
             <PrivateRoute exact path="/">
                 <Home />
             </PrivateRoute>
+            <PrivateRoute exact path="/post/create" component={NewPost} />
+            <PrivateRoute exact path="/post/:postId" component={SinglePost} />
+            <PrivateRoute
+                exact
+                path="/post/edit/:postId"
+                component={EditPost}
+            />
+
             <PrivateRoute exact path="/users">
                 <Users />
             </PrivateRoute>
@@ -57,7 +67,7 @@ export default function MainRouter() {
             <PrivateRoute exact path="/findpeople">
                 <FindPeople />
             </PrivateRoute>
-            <PrivateRoute exact path="/post/create" component={NewPost} />
+
             {/* <Route exact path="/post/:postId" component={SinglePost} />
             <PrivateRoute
                 exact

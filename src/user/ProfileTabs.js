@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import DefaultProfile from '../images/avatar.jpg';
 
-function ProfileTabs({ following, followers }) {
+function ProfileTabs({ following, followers, posts }) {
     const { followersTab, followingsTab, postsTab } = {
         followersTab: 'followersTab',
         followingsTab: 'followingsTab',
@@ -34,6 +34,19 @@ function ProfileTabs({ following, followers }) {
                 />
                 <p className="lead mb-0 ms-2">{user.name}</p>
                 <div></div>
+            </Link>
+        ));
+    };
+
+    const renderPosts = () => {
+        if (!posts) return;
+        return posts.map((post) => (
+            <Link
+                to={`/post/${post._id}`}
+                className="d-flex align-items-center mb-2"
+                key={post._id}
+            >
+                <p className="lead mb-0 ms-2">{post.title}</p>
             </Link>
         ));
     };
@@ -119,7 +132,7 @@ function ProfileTabs({ following, followers }) {
                     role="tabpanel"
                     aria-labelledby="ex1-tab-3"
                 >
-                    POSTS
+                    {renderPosts()}
                 </div>
             </div>
         </div>

@@ -1,7 +1,6 @@
 import React from 'react';
 
-function Spinner({ show, ...rest } = { show: true }) {
-    if (!show) return null;
+function Spinner({ ...rest } = { show: true }) {
     return (
         <div className="spinner-border" role="status" {...rest}>
             <span className="visually-hidden">Loading...</span>

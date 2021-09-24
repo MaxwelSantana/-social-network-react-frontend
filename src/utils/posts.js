@@ -33,4 +33,57 @@ function usePosts() {
     return { posts, ...rest };
 }
 
-export { useCreatePost, usePosts };
+function usePost(postId) {
+    const { run, data: post, ...rest } = useAsync();
+
+    useEffect(() => {
+        run(client(`post/${postId}`));
+    }, [run, postId]);
+
+    return { post, ...rest };
+}
+
+function usePostsByUser(userId) {
+    const client = useClient();
+    const { run, data: posts, ...rest } = useAsync({ data: [] });
+
+    useEffect(() => {
+        run(client(`posts/by/${userId}`));
+    }, [client, run, userId]);
+
+    return { posts, ...rest };
+}
+
+function useDeletePost(postId) {
+    const client = useClient();
+    const { run, ...rest } = useAsync();
+
+    const callApi = useCallback(
+        () => run(client(`post/${postId}`, { method: 'DELETE' })),
+        [client, postId, run],
+    );
+
+    return [callApi, rest];
+}
+
+function useUpdatePost(postId) {
+    const client = useClient();
+    const { run, ...rest } = useAsync();
+
+    const callApi = useCallback(
+        (updates) =>
+            run(client(`post/${postId}`, { method: 'PUT', body: updates })),
+        [client, postId, run],
+    );
+
+    return [callApi, rest];
+}
+
+export {
+    useCreatePost,
+    usePosts,
+    usePost,
+    usePostsByUser,
+    useDeletePost,
+    useUpdatePost,
+};

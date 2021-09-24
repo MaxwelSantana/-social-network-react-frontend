@@ -27,6 +27,7 @@ function DeleteUser({ userId }) {
                 onClick={handleDeleteConfirmation}
                 type="button"
                 className="btn btn-danger"
+                disabled={isLoading}
             >
                 {isLoading ? <Spinner show={true} /> : 'Delete Profile'}
             </button>

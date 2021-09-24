@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Spinner } from '../components/Spinner';
 import { useAuth } from '../context/auth-context';
 import DefaultProfile from '../images/avatar.jpg';
+import { usePostsByUser } from '../utils/posts';
 import { useProfile } from '../utils/profiles';
 import { DeleteUser } from './DeleteUser';
 import { FollowProfileButton } from './FollowProfileButton';
@@ -14,6 +15,7 @@ export default function Profile() {
     const { user: authUser } = useAuth();
     const { userId } = useParams();
     const [refetch, { data: user, error, isLoading }] = useProfile(userId);
+    const { posts } = usePostsByUser(userId);
     const { name, email } = user;
     useErrorHandler(error);
 
@@ -27,6 +29,12 @@ export default function Profile() {
         if (isAuthenticatedUser) {
             return (
                 <>
+                    <Link
+                        to={`/post/create`}
+                        className="btn btn-secondary me-2"
+                    >
+                        Create Post
+                    </Link>
                     <Link
                         to={`/user/edit/${user?._id}`}
                         className="btn btn-primary me-2"
@@ -46,6 +54,7 @@ export default function Profile() {
             <ProfileTabs
                 followers={user.followers}
                 following={user.following}
+                posts={posts}
             />
         </div>
     );
@@ -64,7 +73,11 @@ export default function Profile() {
             <div className="row">
                 <div className="col-md-4">
                     <img
-                        style={{ height: '200px', width: 'auto' }}
+                        style={{
+                            height: '200px',
+                            width: '100%',
+                            objectFit: 'cover',
+                        }}
                         className="img-thumbnail"
                         src={photoUrl}
                         alt={name}

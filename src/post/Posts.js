@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePosts } from '../utils/posts';
-import DefaultPost from '../images/avatar.jpg';
+import DefaultPost from '../images/mountains.jpg';
+import DefaultProfile from '../images/avatar.jpg';
 import { Link } from 'react-router-dom';
 import { Spinner } from '../components/Spinner';
 
@@ -15,14 +16,17 @@ function Posts() {
                 <li className="list-group-item d-flex " key={post._id}>
                     <div>
                         <img
-                            src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+                            src={`${process.env.REACT_APP_API_URL}/user/photo/${post.postedBy?._id}`}
                             alt={post.title}
-                            onError={(i) => (i.target.src = `${DefaultPost}`)}
+                            onError={(i) =>
+                                (i.target.src = `${DefaultProfile}`)
+                            }
                             className="img-thumbnail mb-3"
                             style={{
                                 height: '40px',
-                                width: '100%',
+                                width: '40px',
                                 borderRadius: '50%',
+                                objectFit: 'cover',
                             }}
                         />
                     </div>
@@ -32,6 +36,21 @@ function Posts() {
                             <p className="card-text">
                                 {post.body.substring(0, 100)}
                             </p>
+                        </div>
+                        <div>
+                            <img
+                                src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+                                alt={post.title}
+                                onError={(i) =>
+                                    (i.target.src = `${DefaultPost}`)
+                                }
+                                className="img-thumbnail mb-3"
+                                style={{
+                                    height: '200px',
+                                    width: '100%',
+                                    objectFit: 'cover',
+                                }}
+                            />
                         </div>
                         <div>
                             <p className="font-italic mark">
@@ -52,14 +71,18 @@ function Posts() {
         });
     };
 
+    if (isLoading)
+        return (
+            <Spinner
+                show={true}
+                style={{ position: 'fixed', inset: 0, margin: 'auto' }}
+            />
+        );
+
     return (
-        <div className="container">
+        <div className="container col-md-4">
             <h2 className="mt-5 mb-5">Posts</h2>
-            {isLoading ? (
-                <Spinner show={true} />
-            ) : (
-                <ul className="list-group col-md-4">{renderPosts()}</ul>
-            )}
+            <ul className="list-group">{renderPosts()}</ul>
         </div>
     );
 }
