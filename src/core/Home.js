@@ -1,17 +1,13 @@
 import React from 'react';
 import { useNotification } from '../context/notification-context';
+import Posts from '../post/Posts';
 
 export default function Home() {
-    const { error } = useNotification();
+    console.log('Home render');
     return (
         <div className="jumbotron">
             <h1>Home Screen</h1>
-            <button
-                className="btn btn-primary btn-rounded"
-                onClick={() => error('EROUUUUU')}
-            >
-                EROUUUUU
-            </button>
+            <Posts />
         </div>
     );
 }

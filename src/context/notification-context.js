@@ -1,21 +1,28 @@
 import { Notification } from '../components/Notification';
 
-const { createContext, useContext, useState } = require('react');
+const {
+    createContext,
+    useContext,
+    useState,
+    useCallback,
+    useMemo,
+} = require('react');
 
 const notificationContext = createContext();
 
 const NotificationProvider = ({ children }) => {
     const [notification, setNotification] = useState();
 
-    const error = (message) => {
+    const error = useCallback((message) => {
         setNotification({ type: 'error', message });
-    };
+    }, []);
 
     const removeNotification = () => {
         setNotification(null);
     };
 
-    const value = { error };
+    const value = useMemo(() => ({ error }), [error]);
+
     return (
         <notificationContext.Provider value={value}>
             {children}

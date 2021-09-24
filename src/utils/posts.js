@@ -1,6 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAuth, useClient } from '../context/auth-context';
 import { useAsync } from './hooks';
+import { client } from './api-client';
 
 function useCreatePost() {
     const { user } = useAuth();
@@ -22,4 +23,14 @@ function useCreatePost() {
     return [callApi, { ...rest }];
 }
 
-export { useCreatePost };
+function usePosts() {
+    const { run, data: posts, ...rest } = useAsync({ data: [] });
+
+    useEffect(() => {
+        run(client('posts'));
+    }, [run]);
+
+    return { posts, ...rest };
+}
+
+export { useCreatePost, usePosts };
