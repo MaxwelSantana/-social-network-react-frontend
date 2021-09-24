@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
+import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { useNotification } from '../context/notification-context';
 import { usePost, useUpdatePost } from '../utils/posts';
+import DefaultPost from '../images/mountains.jpg';
 
 function EditPost() {
     const { postId } = useParams();
@@ -14,9 +16,10 @@ function EditPost() {
         body: '',
         fileSize: 0,
     });
-    const [error, setError] = useState(null);
-    const postDataRef = useRef(new FormData());
+    const likes = post ? post.likes.length : 0;
 
+    const [formError, setFormError] = useState(null);
+    const postDataRef = useRef(new FormData());
     const notification = useNotification();
 
     useEffect(() => {
@@ -24,7 +27,7 @@ function EditPost() {
     }, [post]);
 
     const handleChange = (name) => (event) => {
-        setError('');
+        setFormError('');
         const value =
             name === 'photo' ? event.target.files[0] : event.target.value;
         const fileSize = name === 'photo' ? event.target.files[0].size : 0;
@@ -35,15 +38,15 @@ function EditPost() {
 
     const isValid = () => {
         if (fileSize > 1000000) {
-            setError('File size should be less than 100kb');
+            setFormError('File size should be less than 100kb');
             return false;
         }
         if (title.length === 0) {
-            setError('Title is required');
+            setFormError('Title is required');
             return false;
         }
         if (body.length === 0) {
-            setError('Body is required');
+            setFormError('Body is required');
             return false;
         }
         return true;
@@ -73,6 +76,23 @@ function EditPost() {
     return (
         <div className="container">
             <h2 className="mt-5 mb-5">EditPost</h2>
+            <ErrorMessage show={!!formError}>{formError}</ErrorMessage>
+            <img
+                style={{ height: '200px', width: 'auto' }}
+                className="img-thumbnail"
+                src={`${process.env.REACT_APP_API_URL}/post/photo/${
+                    post._id
+                }?${new Date().getTime()}`}
+                onError={(i) => (i.target.src = `${DefaultPost}`)}
+                alt={title}
+            />
+            <h3 onClick={this.likeToggle}>
+                <i
+                    className="fa fa-thumbs-up text-success bg-dark"
+                    style={{ padding: '10px', borderRadius: '50%' }}
+                />
+                {likes} Likes
+            </h3>
             <form
                 onSubmit={handleSubmit}
                 className={`row g-1 needs-validation was-validated`}

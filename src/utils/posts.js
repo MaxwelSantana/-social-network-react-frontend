@@ -79,6 +79,41 @@ function useUpdatePost(postId) {
     return [callApi, rest];
 }
 
+function useLikePost(postId) {
+    const client = useClient();
+    const { run, ...rest } = useAsync();
+
+    const callApi = useCallback(
+        (userId) =>
+            run(
+                client(`post/like`, {
+                    method: 'PUT',
+                    data: { postId, userId },
+                }),
+            ),
+        [client, postId, run],
+    );
+
+    return [callApi, rest];
+}
+function useUnLikePost(postId) {
+    const client = useClient();
+    const { run, ...rest } = useAsync();
+
+    const callApi = useCallback(
+        (userId) =>
+            run(
+                client(`post/unlike`, {
+                    method: 'PUT',
+                    data: { postId, userId },
+                }),
+            ),
+        [client, postId, run],
+    );
+
+    return [callApi, rest];
+}
+
 export {
     useCreatePost,
     usePosts,
@@ -86,4 +121,6 @@ export {
     usePostsByUser,
     useDeletePost,
     useUpdatePost,
+    useLikePost,
+    useUnLikePost,
 };

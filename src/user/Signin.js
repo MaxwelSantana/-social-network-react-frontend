@@ -33,7 +33,7 @@ export default function Signin() {
 
             <ErrorMessage show={isError}>{error}</ErrorMessage>
 
-            <Spinner show={isLoading} />
+            {isLoading && <Spinner />}
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

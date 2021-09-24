@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Spinner } from '../components/Spinner';
 import { useAuth } from '../context/auth-context';
 import DefaultProfile from '../images/avatar.jpg';
 import DefaultPost from '../images/mountains.jpg';
-import { useDeletePost, usePost } from '../utils/posts';
+import {
+    useDeletePost,
+    useLikePost,
+    usePost,
+    useUnLikePost,
+} from '../utils/posts';
 
 function SinglePost() {
     const { user: authUser } = useAuth();
@@ -20,6 +25,33 @@ function SinglePost() {
     const [callDeletePost, { isLoading: isLoadingDelete }] =
         useDeletePost(postId);
     const history = useHistory();
+
+    const [callLikeApi, { isLoading: isLoadingLike }] = useLikePost(postId);
+    const [callUnLikeApi, { isLoading: isLoadingUnLike }] =
+        useUnLikePost(postId);
+    const [{ currentUserLike, likes }, setLikeControl] = useState({
+        currentUserLike: false,
+        likes: 0,
+    });
+
+    useEffect(() => {
+        if (!post || !post.likes) return;
+        setLikeControl({
+            currentUserLike: post.likes.indexOf(authUser?._id) !== -1,
+            likes: post.likes.length,
+        });
+    }, [authUser?._id, post]);
+
+    const likeToggle = () => {
+        if (!authUser) return history.push('/signin');
+        const callApi = currentUserLike ? callUnLikeApi : callLikeApi;
+        callApi(authUser?._id).then((updatedPost) => {
+            setLikeControl({
+                currentUserLike: !currentUserLike,
+                likes: updatedPost.likes.length,
+            });
+        });
+    };
 
     const handleDeleteConfirmation = () => {
         if (window.confirm('Are you sure you want to delete this post?'))
@@ -100,6 +132,25 @@ function SinglePost() {
                     objectFit: 'cover',
                 }}
             />
+            {isLoadingLike || isLoadingUnLike ? (
+                <Spinner />
+            ) : currentUserLike ? (
+                <h3 onClick={likeToggle}>
+                    <i
+                        className="fa fa-thumbs-up text-success bg-dark"
+                        style={{ padding: '10px', borderRadius: '50%' }}
+                    />
+                    {likes} Likes
+                </h3>
+            ) : (
+                <h3 onClick={likeToggle}>
+                    <i
+                        className="fa fa-thumbs-up text-warning bg-dark"
+                        style={{ padding: '10px', borderRadius: '50%' }}
+                    />
+                    {likes} Likes
+                </h3>
+            )}
             <p className="font-italic mark">
                 Posted by <Link to={`${posterId}`}>{posterName} </Link>
                 on {new Date(post.created).toDateString()}
