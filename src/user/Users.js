@@ -21,7 +21,7 @@ export default function Users() {
     return (
         <div className="container">
             <h2 className="mt-5 mb-5">Users</h2>
-            <Spinner show={isLoading} />
+            {isLoading && <Spinner />}
             <ErrorMessage show={isError}>{error}</ErrorMessage>
             <table className="table table-hover">
                 <thead>
